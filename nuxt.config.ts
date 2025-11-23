@@ -1,14 +1,28 @@
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+  future: {
+    compatibilityVersion: 5
+  },
 
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true
+  },
 
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/icon'
+  ],
+
+  css: [
+    '@/assets/css/main.css'
+  ],
+
+  tailwindcss: {
+    viewer: false
+  },
 
   vite: {
     define: {
-      'process.env': {},
-      global: 'window',
-    },
-  },
+      'process.env': {}
+    }
+  }
 })
