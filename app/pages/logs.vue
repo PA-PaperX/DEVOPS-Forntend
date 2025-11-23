@@ -37,7 +37,7 @@
             v-model="filter.search"
             type="text"
             placeholder="Search via message or ID..."
-            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm"
+            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm text-slate-700 placeholder:text-slate-500"
           />
         </div>
 
@@ -187,11 +187,17 @@ onUnmounted(() => {
   window.removeEventListener('local-storage-update', loadLogsFromStorage)
 })
 
+// ใน logs.vue
 const filteredLogs = computed(() => {
   return logs.value.filter(log => {
     const matchLevel = filter.value.level === '' || log.level === filter.value.level
-    const matchSearch = log.message.toLowerCase().includes(filter.value.search.toLowerCase())
-      || (log.details && log.details.toLowerCase().includes(filter.value.search.toLowerCase()))
+    const searchTerm = filter.value.search.toLowerCase().trim()
+    const searchId = searchTerm.replace('#', '')
+    const matchSearch = 
+         log.message.toLowerCase().includes(searchTerm)
+         (log.details && log.details.toLowerCase().includes(searchTerm))
+         log.id.toString().includes(searchId)
+
     return matchLevel && matchSearch
   })
 })
@@ -211,7 +217,6 @@ function getLevelBadgeClass(level) {
     case 'error': return 'bg-rose-50 text-rose-700 border-rose-100'
     case 'warning': return 'bg-amber-50 text-amber-700 border-amber-100'
     case 'info': return 'bg-sky-50 text-sky-700 border-sky-100'
-    // เพิ่มสีเขียวสำหรับ DATA
     case 'data': return 'bg-emerald-50 text-emerald-700 border-emerald-100'
     default: return 'bg-slate-100 text-slate-600 border-slate-200'
   }
