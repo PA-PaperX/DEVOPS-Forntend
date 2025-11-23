@@ -55,9 +55,9 @@ const form = ref({ username: '', password: '' })
 const errorMsg = ref('')
 
 onMounted(() => {
-  if (localStorage.getItem('isAuthenticated') === 'true') {
-    router.push('/dashboard')
-  }
+  // แก้ไข: จากเดิมที่เช็คเพื่อเด้งเข้า Dashboard
+  // เปลี่ยนเป็น "ล้างค่าทิ้ง" เพื่อบังคับล็อกอินใหม่ทุกครั้งที่เข้าหน้านี้
+  localStorage.removeItem('isAuthenticated')
 })
 
 const handleLogin = () => {

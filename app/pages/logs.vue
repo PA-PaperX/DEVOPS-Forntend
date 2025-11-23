@@ -55,85 +55,97 @@
       </div>
 
       <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-50 border-b border-slate-100 text-xs uppercase tracking-wider text-slate-500">
-                <th class="px-6 py-4 font-semibold">Timestamp</th>
-                <th class="px-6 py-4 font-semibold">Level</th>
-                <th class="px-6 py-4 font-semibold">Message</th>
-                <th class="px-6 py-4 font-semibold text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
-              <template v-if="filteredLogs.length > 0">
-                <template v-for="log in filteredLogs" :key="log.id">
-                  <tr class="hover:bg-slate-50/80 transition-colors group">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="flex flex-col">
-                        <span class="text-sm font-medium text-slate-700">{{ formatTime(log.timestamp).time }}</span>
-                        <span class="text-xs text-slate-400">{{ formatTime(log.timestamp).date }}</span>
-                      </div>
-                    </td>
+        <ClientOnly>
+          <template #fallback>
+            <div class="p-8 text-center text-slate-400 flex flex-col items-center">
+              <svg class="animate-spin h-5 w-5 text-indigo-500 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Loading system logs...</span>
+            </div>
+          </template>
 
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span 
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
-                        :class="getLevelBadgeClass(log.level)"
-                      >
-                        {{ log.level.toUpperCase() }}
-                      </span>
-                    </td>
-
-                    <td class="px-6 py-4">
-                      <p class="text-sm text-slate-600 truncate max-w-md" :title="log.message">
-                        {{ log.message }}
-                      </p>
-                    </td>
-
-                    <td class="px-6 py-4 text-right">
-                      <button 
-                        @click="toggleDetails(log)" 
-                        class="text-indigo-600 hover:text-indigo-800 text-sm font-medium hover:underline decoration-2 underline-offset-2"
-                      >
-                        {{ log.showDetails ? 'Close' : 'View Details' }}
-                      </button>
-                    </td>
-                  </tr>
-
-                  <tr v-if="log.showDetails" class="bg-slate-50/50 animate-fadeIn">
-                    <td colspan="4" class="px-6 py-4">
-                      <div class="bg-slate-900 rounded-lg p-4 font-mono text-xs text-slate-300 overflow-x-auto shadow-inner border border-slate-800">
-                        <div class="flex justify-between mb-2 border-b border-slate-700 pb-2">
-                          <span class="text-slate-500">LOG ID: #{{ log.id }}</span>
-                          <span class="text-indigo-400">Stack Trace / Payload</span>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-100 text-xs uppercase tracking-wider text-slate-500">
+                  <th class="px-6 py-4 font-semibold">Timestamp</th>
+                  <th class="px-6 py-4 font-semibold">Level</th>
+                  <th class="px-6 py-4 font-semibold">Message</th>
+                  <th class="px-6 py-4 font-semibold text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-50">
+                <template v-if="filteredLogs.length > 0">
+                  <template v-for="log in filteredLogs" :key="log.id">
+                    <tr class="hover:bg-slate-50/80 transition-colors group">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex flex-col">
+                          <span class="text-sm font-medium text-slate-700">{{ formatTime(log.timestamp).time }}</span>
+                          <span class="text-xs text-slate-400">{{ formatTime(log.timestamp).date }}</span>
                         </div>
-                        <pre>{{ log.details || 'No additional details provided.' }}</pre>
-                      </div>
-                    </td>
-                  </tr>
-                </template>
-              </template>
+                      </td>
 
-              <tr v-else>
-                <td colspan="4" class="px-6 py-16 text-center">
-                  <div class="flex flex-col items-center justify-center text-slate-400">
-                    <InboxIcon class="h-12 w-12 mb-2 text-slate-300" />
-                    <p class="text-lg font-medium text-slate-500">No logs found</p>
-                    <p class="text-sm">Try adjusting your filters, start simulation, or connect MQTT.</p>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        
-        <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-between items-center">
-          <span class="text-xs text-slate-500">Showing {{ filteredLogs.length }} events</span>
-          <button @click="loadMore" class="text-xs font-medium text-slate-600 hover:text-indigo-600 transition-colors">
-            Load older logs
-          </button>
-        </div>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span 
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                          :class="getLevelBadgeClass(log.level)"
+                        >
+                          {{ log.level.toUpperCase() }}
+                        </span>
+                      </td>
+
+                      <td class="px-6 py-4">
+                        <p class="text-sm text-slate-600 truncate max-w-md" :title="log.message">
+                          {{ log.message }}
+                        </p>
+                      </td>
+
+                      <td class="px-6 py-4 text-right">
+                        <button 
+                          @click="toggleDetails(log)" 
+                          class="text-indigo-600 hover:text-indigo-800 text-sm font-medium hover:underline decoration-2 underline-offset-2"
+                        >
+                          {{ log.showDetails ? 'Close' : 'View Details' }}
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr v-if="log.showDetails" class="bg-slate-50/50 animate-fadeIn">
+                      <td colspan="4" class="px-6 py-4">
+                        <div class="bg-slate-900 rounded-lg p-4 font-mono text-xs text-slate-300 overflow-x-auto shadow-inner border border-slate-800">
+                          <div class="flex justify-between mb-2 border-b border-slate-700 pb-2">
+                            <span class="text-slate-500">LOG ID: #{{ log.id }}</span>
+                            <span class="text-indigo-400">Stack Trace / Payload</span>
+                          </div>
+                          <pre>{{ log.details || 'No additional details provided.' }}</pre>
+                        </div>
+                      </td>
+                    </tr>
+                  </template>
+                </template>
+
+                <tr v-else>
+                  <td colspan="4" class="px-6 py-16 text-center">
+                    <div class="flex flex-col items-center justify-center text-slate-400">
+                      <InboxIcon class="h-12 w-12 mb-2 text-slate-300" />
+                      <p class="text-lg font-medium text-slate-500">No logs found</p>
+                      <p class="text-sm">Try adjusting your filters, start simulation, or connect MQTT.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-between items-center">
+            <span class="text-xs text-slate-500">Showing {{ filteredLogs.length }} events</span>
+            <button @click="loadMore" class="text-xs font-medium text-slate-600 hover:text-indigo-600 transition-colors">
+              Load older logs
+            </button>
+          </div>
+        </ClientOnly>
       </div>
     </div>
   </main>
@@ -141,6 +153,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { 
   MagnifyingGlassIcon, 
   TrashIcon, 
@@ -148,6 +161,9 @@ import {
   InboxIcon,
   ChartBarIcon
 } from '@heroicons/vue/24/outline'
+
+// Setup Router
+const router = useRouter()
 
 // State
 const logs = ref([])
@@ -172,13 +188,17 @@ const loadLogsFromStorage = () => {
 }
 
 onMounted(() => {
-  // Load initially
+  // Auth Check: ถ้าไม่ได้ล็อกอิน ดีดกลับหน้า Login
+  if (localStorage.getItem('isAuthenticated') !== 'true') {
+    router.push('/')
+    return
+  }
+
+  // Load logs
   loadLogsFromStorage()
   
-  // Listen for storage changes (cross-tab)
+  // Listen for storage changes
   window.addEventListener('storage', loadLogsFromStorage)
-  
-  // Listen for local changes (same tab / component event)
   window.addEventListener('local-storage-update', loadLogsFromStorage)
 })
 
@@ -187,15 +207,19 @@ onUnmounted(() => {
   window.removeEventListener('local-storage-update', loadLogsFromStorage)
 })
 
-// ใน logs.vue
+// Corrected Search Logic
 const filteredLogs = computed(() => {
   return logs.value.filter(log => {
     const matchLevel = filter.value.level === '' || log.level === filter.value.level
+    
+    // เตรียมคำค้นหา
     const searchTerm = filter.value.search.toLowerCase().trim()
     const searchId = searchTerm.replace('#', '')
+
+    // ค้นหาใน Message OR Details OR ID
     const matchSearch = 
-         log.message.toLowerCase().includes(searchTerm)
-         (log.details && log.details.toLowerCase().includes(searchTerm))
+         log.message.toLowerCase().includes(searchTerm) ||
+         (log.details && log.details.toLowerCase().includes(searchTerm)) ||
          log.id.toString().includes(searchId)
 
     return matchLevel && matchSearch
