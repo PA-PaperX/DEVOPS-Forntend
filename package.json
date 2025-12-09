@@ -1,5 +1,5 @@
 {
-  "name": "devops-lab-frontend-dashboard",
+  "name": "Forntend",
   "type": "module",
   "private": true,
   "scripts": {
@@ -7,21 +7,20 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
+    "chart.js": "^4.5.1",
     "mqtt": "^5.14.1",
     "nuxt": "^4.2.1",
-    "vue": "^3.5.24",
-    "vue-router": "^4.6.3",
-    "chart.js": "^4.4.1",
-    "vue-chartjs": "^5.3.0"
+    "pinia": "^3.0.4",
+    "vue": "^3.5.25",
+    "vue-chartjs": "^5.3.3",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
-    "@nuxt/icon": "^2.1.0",
-    "@nuxtjs/tailwindcss": "^6.14.0"
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "@pinia/nuxt": "^0.11.3"
   }
 }

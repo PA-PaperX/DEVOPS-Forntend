@@ -5,11 +5,13 @@ services:
     build: .
     ports:
       - "3000:3000"
-    restart: always
     environment:
-      - NUXT_PUBLIC_API_BASE=http://backend:4000
+      - MQTT_BROKER_URL=ws://localhost:9001
+    depends_on:
+      - mqtt
+
   mqtt:
-    image: eclipse-mosquitto:latest
+    image: eclipse-mosquitto:2
     ports:
       - "1883:1883"
       - "9001:9001"
